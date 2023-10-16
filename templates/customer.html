@@ -1,0 +1,301 @@
+{% load static %}
+<!DOCTYPE html>
+<!-- Coding by CodingNepal | www.codingnepalweb.com -->
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8">
+    <title> Responsiive Admin Dashboard | CodingLab </title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <!-- Boxicons CDN Link -->
+    <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+   </head>
+<body>
+  <div class="sidebar">
+    <div class="logo-details">
+      <i class='bx bxl-c-plus-plus'></i>
+      <span class="logo_name">CodingLab</span>
+    </div>
+      <ul class="nav-links">
+        <li>
+          <a href="http://127.0.0.1:8000/dashboard/" class="active">
+            <i class='bx bx-grid-alt' ></i>
+            <span class="links_name">Dashboard</span>
+          </a>
+        </li>
+        <li>
+            <a href="http://127.0.0.1:8000/dashboard/providers/">
+              <i class='bx bx-list-ul' ></i>
+              <span class="links_name">Provider List</span>
+            </a>
+          </li>
+          
+        <li>
+          <a href="http://127.0.0.1:8000/dashboard/customers/">
+            <i class='bx bx-list-ul' ></i>
+            <span class="links_name">Customer List</span>
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <i class='bx bx-cog' ></i>
+            <span class="links_name">Setting</span>
+          </a>
+        </li>
+        <li class="log_out">
+          <a href="http://127.0.0.1:8000/login/">
+            <i class='bx bx-log-out'></i>
+            <span class="links_name">Log out</span>
+          </a>
+        </li>
+      </ul>
+  </div>
+<section class="home-section">
+    <nav>
+      <div class="sidebar-button">
+        <i class='bx bx-menu sidebarBtn'></i>
+        <span class="dashboard">Customer List</span>
+      </div>
+      <div class="search-box">
+        <input type="text" placeholder="Search...">
+        <i class='bx bx-search' ></i>
+      </div>
+      <div class="profile-details">
+        <img src="images/profile.jpg" alt="">
+        <span class="admin_name">{{ request.user.first_name }}</span>
+        <i class='bx bx-chevron-down' ></i>
+      </div>
+        
+    </nav>
+    
+        
+          <div class="home-content">
+              
+            <div class="customer-list-table">
+              <div class="d-flex justify-content-between">
+                <div></div>
+                <div class="provider-table-title d-inline-block align-items-center">Recent Customer</div>
+              <button type="button" class="btn btn-outline-primary d-inline-block"data-bs-toggle="modal" data-bs-target="#exampleModal">Create</button>
+              </div>
+                  <!-- Modal -->
+              <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">Create New Customer</h5>
+                      <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <form id="contact-form" role="form" method="post" action="http://127.0.0.1:8000/dashboard/create_customer/">
+                        
+                          {% csrf_token %}
+                          <div class="controls">
+                              <div class="row">
+                                  <div class="col-md-6">
+                                      <div class="form-group">
+                                          <label for="form_name">Name *</label>
+                                          <input id="form_name" type="text" name="name" class="form-control" placeholder="Please enter your name *" required>
+                                      </div>
+                                  </div>
+                              </div>
+                              <div class="row">
+                                  <div class="col-md-12">
+                                      <div class="form-group">
+                                          <label for="form_description">Description *</label>
+                                          <textarea id="form_description" name="description" class="form-control" placeholder="Please enter the description *" rows="4" required></textarea>
+                                      </div>
+                                  </div>
+                              </div>
+                              <div class="row">
+                                  <div class="col-md-6">
+                                      <div class="form-group">
+                                          <label for="form_url">URL *</label>
+                                          <input id="form_url" type="url" name="url" class="form-control" placeholder="Please enter the URL *" required>
+                                      </div>
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="status">Status *</label>
+                                    <select id="status" name="status" class="form-control" required>
+                                        <option value="True" {% if provider.status %}selected{% endif %}>True</option>
+                                        <option value="False" {% if not provider.status %}selected{% endif %}>False</option>
+                                    </select>
+                                </div>
+                              </div>
+                              <div class="row">
+                                  <div class="col-md-12">
+                                      <div class="form-group">
+                                          <label for="form_code">Code *</label>
+                                          <input id="form_code" type="text" name="code" class="form-control" placeholder="Please enter the code *" required>
+                                      </div>
+                                  </div>
+                              </div>
+                              <div class="mb-3">
+                                <label for="provider" class="form-label">Provider:</label>
+                                <select class="form-select" name="provider" aria-label="Provider" required>
+                                    <option selected disabled>Select a provider</option>
+                                    <!-- Loop through the providers and populate the options -->
+                                    {% for provider in providers %}
+                                        <option value="{{ provider.id }}">{{ provider.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                          </div>
+                          <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                              <button type="submit" class="btn btn-primary">Save changes</button>
+                          </div>
+                      </form>
+                  </div>
+                  </div>
+                </div>
+              </div>
+
+                <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">URL</th>
+                        <th scope="col">Created At</th>
+                        <th scope="col">Updated At</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Code</th>
+                        <th scope="col">Provider</th>
+                        <th scope="col">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for customer in customers %}
+                      <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>{{ customer.name }}</td>
+                        <td>{{ customer.description }}</td>
+                        <td>{{ customer.url }}</td>
+                        <td>{{ customer.created_at }}</td>
+                        <td>{{ customer.updated_at }}</td>
+                        <td>
+                            <div class="form-check form-switch">
+                              <input class="form-check-input" type="checkbox" id="statusSwitch{{ forloop.counter }}" {% if customer.status %}checked{% endif %} disabled>
+                              <label class="form-check-label" for="statusSwitch{{ forloop.counter }}">
+                                {% if customer.status %}Active{% else %}Inactive{% endif %}
+                              </label>
+                            </div>
+                          </td>
+                        <td>{{ customer.code }}</td>
+                        <td>{{ customer.provider.name }}</td>
+                        <td>
+                          <!-- Add the edit button with a link to the edit URL -->
+                          
+                        <!-- modal.html -->
+                      <button type="button" class="btn btn-outline-primary d-inline-block" data-bs-toggle="modal" data-bs-target="#editCustomerModal">Edit</button>
+
+                      <!-- Edit Customer Modal -->
+                      <div class="modal fade" id="editCustomerModal" tabindex="-1" role="dialog" aria-labelledby="editCustomerModalLabel" aria-hidden="true">
+                          <div class="modal-dialog" role="document">
+                              <div class="modal-content">
+                                  <div class="modal-header">
+                                      <h5 class="modal-title" id="editCustomerModalLabel">Edit Customer</h5>
+                                      <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                          <span aria-hidden="true">&times;</span>
+                                      </button>
+                                  </div>
+                                  <div class="modal-body">
+                                      <!-- Edit Customer Form -->
+                                      <form method="post" action="{% url 'edit_customer' customer.id %}">
+                                          {% csrf_token %}
+                                          <div class="form-group">
+                                              <label for="name">Name *</label>
+                                              <input id="name" type="text" name="name" class="form-control" value="{{ customer.name }}" required>
+                                          </div>
+                                          <div class="form-group">
+                                              <label for="description">Description *</label>
+                                              <textarea id="description" name="description" class="form-control" rows="4" required>{{ customer.description }}</textarea>
+                                          </div>
+                                          <div class="form-group">
+                                              <label for="url">URL *</label>
+                                              <input id="url" type="url" name="url" class="form-control" value="{{ customer.url }}" required>
+                                          </div>
+                                          <div class="form-group">
+                                            <label for="status">Status *</label>
+                                            <select id="status" name="status" class="form-control" required>
+                                                <option value="True" {% if provider.status %}selected{% endif %}>True</option>
+                                                <option value="False" {% if not provider.status %}selected{% endif %}>False</option>
+                                            </select>
+                                        </div>
+                                          <div class="form-group">
+                                              <label for="code">Code *</label>
+                                              <input id="code" type="text" name="code" class="form-control" value="{{ customer.code }}" required>
+                                          </div>
+                                          <div class="form-group">
+                                              <label for="provider">Provider *</label>
+                                              <select id="provider" name="provider" class="form-control" required>
+                                                  <option value="" disabled>Select a provider</option>
+                                                  {% for provider in providers %}
+                                                      <option value="{{ provider.id }}" {% if provider.id == customer.provider.id %}selected{% endif %}>{{ provider.name }}</option>
+                                                  {% endfor %}
+                                              </select>
+                                          </div>
+                                          <!-- Other customer-specific form fields... -->
+                                          <div class="modal-footer">
+                                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                              <button type="submit" class="btn btn-primary">Save changes</button>
+                                          </div>
+                                      </form>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+
+
+                          
+                        </td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                  
+                 </div>
+<!-- Pagination -->
+<nav aria-label="Customer Pagination">
+    <ul class="pagination justify-content-center">
+      <li class="page-item {% if customers.has_previous %} {% else %}disabled{% endif %}">
+        <a class="page-link" href="?page={{ customers.previous_page_number }}">Previous</a>
+      </li>
+      {% for i in customers.paginator.page_range %}
+      <li class="page-item {% if customers.number == i %}active{% endif %}">
+        <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+      </li>
+      {% endfor %}
+      <li class="page-item {% if customers.has_next %} {% else %}disabled{% endif %}">
+        <a class="page-link" href="?page={{ customers.next_page_number }}">Next</a>
+      </li>
+    </ul>
+  </nav>
+
+ <p> <a href="http://127.0.0.1:8000/dashboard/" class="back-to-dashboard">Back to Dashboard</a></p>
+
+  
+
+
+  <script src="{% static 'dashboard.js' %}"></script>
+
+
+  <script>
+let sidebar = document.querySelector(".sidebar");
+let sidebarBtn = document.querySelector(".sidebarBtn");
+sidebarBtn.onclick = function() {
+  sidebar.classList.toggle("active");
+  if(sidebar.classList.contains("active")){
+  sidebarBtn.classList.replace("bx-menu" ,"bx-menu-alt-right");
+}else
+  sidebarBtn.classList.replace("bx-menu-alt-right", "bx-menu");
+}
+ </script>
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
